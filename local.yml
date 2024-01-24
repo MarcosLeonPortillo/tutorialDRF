@@ -14,13 +14,13 @@ services:
     env_file:
       - ./.envs/.local/.postgres
     volumes:
-      - tutorial_postgres_data:/var/lib/postgresql/data
-      - tutorial_data_backups:/backups
+      - django-tutorial-drf_postgres_data:/var/lib/postgresql/data
+      - django-tutorial-drf_backups:/backups
     ports:
       - 5432:5432
 
 volumes:
-  djangobasepro_postgres_data:
-  djangobasepro_data_backups:
+  django-tutorial-drf_postgres_data:
+  django-tutorial-drf_backups:
 
 
