@@ -21,6 +21,31 @@ paths:
               schema:
                 $ref: '#/components/schemas/Snippet'
           description: ''
+  /snippets{format}:
+    get:
+      operationId: snippets_formatted_retrieve_2
+      description: List all code snippets, or create a new snippet.
+      parameters:
+      - in: path
+        name: format
+        schema:
+          type: string
+          enum:
+          - .json
+        required: true
+      tags:
+      - snippets
+      security:
+      - cookieAuth: []
+      - basicAuth: []
+      - {}
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Snippet'
+          description: ''
   /snippets/{id}/:
     get:
       operationId: snippets_retrieve_2
@@ -62,6 +87,82 @@ paths:
       operationId: snippets_destroy
       description: Retrieve, update or delete a code snippet.
       parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        required: true
+      tags:
+      - snippets
+      security:
+      - cookieAuth: []
+      - basicAuth: []
+      - {}
+      responses:
+        '204':
+          description: No response body
+  /snippets/{id}{format}:
+    get:
+      operationId: snippets_formatted_retrieve
+      description: Retrieve, update or delete a code snippet.
+      parameters:
+      - in: path
+        name: format
+        schema:
+          type: string
+          enum:
+          - .json
+        required: true
+      - in: path
+        name: id
+        schema:
+          type: integer
+        required: true
+      tags:
+      - snippets
+      security:
+      - cookieAuth: []
+      - basicAuth: []
+      - {}
+      responses:
+        '200':
+          description: No response body
+    put:
+      operationId: snippets_formatted_update
+      description: Retrieve, update or delete a code snippet.
+      parameters:
+      - in: path
+        name: format
+        schema:
+          type: string
+          enum:
+          - .json
+        required: true
+      - in: path
+        name: id
+        schema:
+          type: integer
+        required: true
+      tags:
+      - snippets
+      security:
+      - cookieAuth: []
+      - basicAuth: []
+      - {}
+      responses:
+        '200':
+          description: No response body
+    delete:
+      operationId: snippets_formatted_destroy
+      description: Retrieve, update or delete a code snippet.
+      parameters:
+      - in: path
+        name: format
+        schema:
+          type: string
+          enum:
+          - .json
+        required: true
       - in: path
         name: id
         schema:
