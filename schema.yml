@@ -6,10 +6,43 @@ info:
 paths:
   /snippets/:
     get:
-      operationId: snippets_retrieve
-      description: List all code snippets, or create a new snippet.
+      operationId: snippets_list
+      parameters:
+      - name: page
+        required: false
+        in: query
+        description: A page number within the paginated result set.
+        schema:
+          type: integer
       tags:
       - snippets
+      security:
+      - cookieAuth: []
+      - basicAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedSnippetList'
+          description: ''
+    post:
+      operationId: snippets_create
+      tags:
+      - snippets
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Snippet'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/Snippet'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/Snippet'
+        required: true
       security:
       - cookieAuth: []
       - basicAuth: []
@@ -23,8 +56,36 @@ paths:
           description: ''
   /snippets{format}:
     get:
-      operationId: snippets_formatted_retrieve_2
-      description: List all code snippets, or create a new snippet.
+      operationId: snippets_formatted_list
+      parameters:
+      - in: path
+        name: format
+        schema:
+          type: string
+          enum:
+          - .json
+        required: true
+      - name: page
+        required: false
+        in: query
+        description: A page number within the paginated result set.
+        schema:
+          type: integer
+      tags:
+      - snippets
+      security:
+      - cookieAuth: []
+      - basicAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedSnippetList'
+          description: ''
+    post:
+      operationId: snippets_formatted_create
       parameters:
       - in: path
         name: format
@@ -35,6 +96,18 @@ paths:
         required: true
       tags:
       - snippets
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Snippet'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/Snippet'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/Snippet'
+        required: true
       security:
       - cookieAuth: []
       - basicAuth: []
@@ -48,8 +121,7 @@ paths:
           description: ''
   /snippets/{id}/:
     get:
-      operationId: snippets_retrieve_2
-      description: Retrieve, update or delete a code snippet.
+      operationId: snippets_retrieve
       parameters:
       - in: path
         name: id
@@ -64,10 +136,13 @@ paths:
       - {}
       responses:
         '200':
-          description: No response body
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Snippet'
+          description: ''
     put:
       operationId: snippets_update
-      description: Retrieve, update or delete a code snippet.
       parameters:
       - in: path
         name: id
@@ -76,16 +151,63 @@ paths:
         required: true
       tags:
       - snippets
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Snippet'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/Snippet'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/Snippet'
+        required: true
       security:
       - cookieAuth: []
       - basicAuth: []
       - {}
       responses:
         '200':
-          description: No response body
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Snippet'
+          description: ''
+    patch:
+      operationId: snippets_partial_update
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        required: true
+      tags:
+      - snippets
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatchedSnippet'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/PatchedSnippet'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/PatchedSnippet'
+      security:
+      - cookieAuth: []
+      - basicAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Snippet'
+          description: ''
     delete:
       operationId: snippets_destroy
-      description: Retrieve, update or delete a code snippet.
       parameters:
       - in: path
         name: id
@@ -104,7 +226,6 @@ paths:
   /snippets/{id}{format}:
     get:
       operationId: snippets_formatted_retrieve
-      description: Retrieve, update or delete a code snippet.
       parameters:
       - in: path
         name: format
@@ -126,10 +247,13 @@ paths:
       - {}
       responses:
         '200':
-          description: No response body
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Snippet'
+          description: ''
     put:
       operationId: snippets_formatted_update
-      description: Retrieve, update or delete a code snippet.
       parameters:
       - in: path
         name: format
@@ -145,16 +269,70 @@ paths:
         required: true
       tags:
       - snippets
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Snippet'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/Snippet'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/Snippet'
+        required: true
       security:
       - cookieAuth: []
       - basicAuth: []
       - {}
       responses:
         '200':
-          description: No response body
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Snippet'
+          description: ''
+    patch:
+      operationId: snippets_formatted_partial_update
+      parameters:
+      - in: path
+        name: format
+        schema:
+          type: string
+          enum:
+          - .json
+        required: true
+      - in: path
+        name: id
+        schema:
+          type: integer
+        required: true
+      tags:
+      - snippets
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatchedSnippet'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/PatchedSnippet'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/PatchedSnippet'
+      security:
+      - cookieAuth: []
+      - basicAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Snippet'
+          description: ''
     delete:
       operationId: snippets_formatted_destroy
-      description: Retrieve, update or delete a code snippet.
       parameters:
       - in: path
         name: format
@@ -1329,6 +1507,43 @@ components:
         * `zephir` - Zephir
         * `zig` - Zig
         * `zone` - Zone
+    PaginatedSnippetList:
+      type: object
+      properties:
+        count:
+          type: integer
+          example: 123
+        next:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=4
+        previous:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=2
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/Snippet'
+    PatchedSnippet:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        title:
+          type: string
+          maxLength: 100
+        code:
+          type: string
+        linenos:
+          type: boolean
+        language:
+          $ref: '#/components/schemas/LanguageEnum'
+        style:
+          $ref: '#/components/schemas/StyleEnum'
     Snippet:
       type: object
       properties:
