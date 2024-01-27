@@ -4,6 +4,34 @@ info:
   version: 1.0.0
   description: Your project description
 paths:
+  /:
+    get:
+      operationId: root_retrieve
+      security:
+      - cookieAuth: []
+      - basicAuth: []
+      - {}
+      responses:
+        '200':
+          description: No response body
+  /{format}:
+    get:
+      operationId: root_formatted_retrieve
+      parameters:
+      - in: path
+        name: format
+        schema:
+          type: string
+          enum:
+          - .json
+        required: true
+      security:
+      - cookieAuth: []
+      - basicAuth: []
+      - {}
+      responses:
+        '200':
+          description: No response body
   /snippets/:
     get:
       operationId: snippets_list
@@ -346,6 +374,49 @@ paths:
       - basicAuth: []
       responses:
         '204':
+          description: No response body
+  /snippets/{id}/highlight/:
+    get:
+      operationId: snippets_highlight_retrieve
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        required: true
+      tags:
+      - snippets
+      security:
+      - cookieAuth: []
+      - basicAuth: []
+      - {}
+      responses:
+        '200':
+          description: No response body
+  /snippets/{id}/highlight{format}:
+    get:
+      operationId: snippets_highlight_formatted_retrieve
+      parameters:
+      - in: path
+        name: format
+        schema:
+          type: string
+          enum:
+          - .html
+        required: true
+      - in: path
+        name: id
+        schema:
+          type: integer
+        required: true
+      tags:
+      - snippets
+      security:
+      - cookieAuth: []
+      - basicAuth: []
+      - {}
+      responses:
+        '200':
           description: No response body
   /users/:
     get:
@@ -1646,8 +1717,21 @@ components:
     PatchedSnippet:
       type: object
       properties:
+        url:
+          type: string
+          format: uri
+          readOnly: true
         id:
           type: integer
+          readOnly: true
+        highlight:
+          type: string
+          format: uri
+          readOnly: true
+        owner:
+          type: string
+          description: Required. 150 characters or fewer. Letters, digits and @/./+/-/_
+            only.
           readOnly: true
         title:
           type: string
@@ -1660,13 +1744,24 @@ components:
           $ref: '#/components/schemas/LanguageEnum'
         style:
           $ref: '#/components/schemas/StyleEnum'
-        owner:
-          type: integer
     Snippet:
       type: object
       properties:
+        url:
+          type: string
+          format: uri
+          readOnly: true
         id:
           type: integer
+          readOnly: true
+        highlight:
+          type: string
+          format: uri
+          readOnly: true
+        owner:
+          type: string
+          description: Required. 150 characters or fewer. Letters, digits and @/./+/-/_
+            only.
           readOnly: true
         title:
           type: string
@@ -1679,12 +1774,12 @@ components:
           $ref: '#/components/schemas/LanguageEnum'
         style:
           $ref: '#/components/schemas/StyleEnum'
-        owner:
-          type: integer
       required:
       - code
+      - highlight
       - id
       - owner
+      - url
     StyleEnum:
       enum:
       - abap
@@ -1788,6 +1883,10 @@ components:
     User:
       type: object
       properties:
+        url:
+          type: string
+          format: uri
+          readOnly: true
         id:
           type: integer
           readOnly: true
@@ -1800,10 +1899,13 @@ components:
         snippets:
           type: array
           items:
-            type: integer
+            type: string
+            format: uri
+          readOnly: true
       required:
       - id
       - snippets
+      - url
       - username
   securitySchemes:
     basicAuth:
